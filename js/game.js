@@ -1,17 +1,17 @@
 "use strict";
 
-$(document).ready(function(){  
+$(document).ready(function(){
   // save the start button for later
   var oStartButton = $('#start-btn');
   var oRestartButton = $('#restart');
-  
+
   // make our paddles
   var oPaddle = {
     height: 70,
     width: 10,
     speed: 30
   };
-  
+
   // make our ball
   var oBall = {
     element: $('#ball'),
@@ -29,7 +29,7 @@ $(document).ready(function(){
       if( this.verticalDirection == 'up' ) {
         // assume we're going to go to the next spot
         iNewTop -= this.speed;
-        
+
         // change direction if needed
         if( iNewTop <= 0 ) {
           iNewTop = 0;
@@ -39,7 +39,7 @@ $(document).ready(function(){
       else {
         // assume we're going to go to the next spot
         iNewTop += this.speed;
-        
+
         // change direction if needed
         if( iNewTop >= $(window).height() - this.diameter ) {
           iNewTop = $(window).height() - this.diameter;
@@ -63,12 +63,12 @@ $(document).ready(function(){
         if( iNewLeft <= 0 ) {
           // increment ai score
           oGame.ai.incrementScore();
-          
+
           // end game if needed
-          if( oGame.ai.score >= 1 ) {
+          if( oGame.ai.score >= 10 ) {
             oGame.end();
           }
-          
+
           // resposition ball
           iNewTop  = oGame.player.element.offset().top + ( oGame.player.paddle.height / 2 );
           iNewLeft = oGame.player.paddle.width;
@@ -89,12 +89,12 @@ $(document).ready(function(){
         if( iNewLeft + oGame.ball.diameter >= $(window).width() ) {
           // increment player score and update it on the page
           oGame.player.incrementScore();
-          
+
           // end game if needed
-          if( oGame.player.score >= 1 ) {
+          if( oGame.player.score >= 10 ) {
             oGame.end();
           }
-          
+
           // resposition ball
           iNewTop  = oGame.ai.element.offset().top + ( oGame.ai.paddle.height / 2 );
           iNewLeft = $(window).width() - oGame.ai.paddle.width;
@@ -107,7 +107,7 @@ $(document).ready(function(){
       this.element.offset( oNewOffset );
     }
   };
-  
+
   // make our paddles
   var oPlayer = {
     element: $('#player-paddle'),
@@ -116,7 +116,7 @@ $(document).ready(function(){
     scoreCounter: $('#player-score'),
     incrementScore: function() {
       this.score++;
-      $( this.scoreCounter ).html( this.score );      
+      $( this.scoreCounter ).html( this.score );
     }
   };
   var oAI = {
@@ -126,7 +126,7 @@ $(document).ready(function(){
     scoreCounter: $('#ai-score'),
     incrementScore: function() {
       this.score++;
-      $( this.scoreCounter ).html( this.score );      
+      $( this.scoreCounter ).html( this.score );
     }
   };
 
@@ -139,20 +139,20 @@ $(document).ready(function(){
     init: function() {
       this.player.score = 0;
       this.ai.score = 0;
-      this.player.scoreCounter.html( 0 ); 
-      this.ai.scoreCounter.html( 0 ); 
+      this.player.scoreCounter.html( 0 );
+      this.ai.scoreCounter.html( 0 );
     },
     end: function() {
       bGameOver = true;
-      
+
       $( '#game-over' ).removeClass( 'hidden' );
     }
   };
-  
+
   // set our constants
   var DOWN_ARROW = 83;
   var UP_ARROW = 87;
-  
+
   // make general use vars
   var oOffset, oNewOffset;
   var iNewTop = 0, iNewLeft = 0
@@ -173,7 +173,7 @@ $(document).ready(function(){
         oNewOffset = { top: iNewTop, left: 0 };
         oGame.player.element.offset( oNewOffset );
       }
-      
+
       // move player paddle down
       if( e.which == DOWN_ARROW ) {
         oOffset = oGame.player.element.offset();
@@ -186,23 +186,23 @@ $(document).ready(function(){
       }
     });
   };
-  
+
   var HitPlayerPaddle = function(){
     var oBallOffset = oGame.ball.element.offset();
     var oPaddleOffset = oGame.player.element.offset();
     return oBallOffset.left <= oGame.player.paddle.width && oBallOffset.top >= oPaddleOffset.top && oBallOffset.top <= oPaddleOffset.top + oPaddle.height;
   };
-  
+
   var HitAIPaddle = function(){
     var oBallOffset = oGame.ball.element.offset();
     var oPaddleOffset = oGame.ai.element.offset();
     return oBallOffset.left + oGame.ai.paddle.width >= $(window).width() - oGame.ai.paddle.width && oBallOffset.top >= oPaddleOffset.top && oBallOffset.top <= oPaddleOffset.top + oPaddle.height;
   };
-  
+
   var CalculateAIPaddlePosition = function(){
     var oOffset = oGame.ai.element.offset();
     var oBallOffset = oGame.ball.element.offset();
-    
+
     // figure out the next position
     iNewTop = oOffset.top;
     if( oGame.ball.horizontalDirection == 'right' ) {
@@ -213,25 +213,25 @@ $(document).ready(function(){
         iNewTop = iNewTop + oGame.ai.paddle.speed;
       }
     }
-    
+
     // make sure it can't go farther up than the baseline
     if( iNewTop < 0 ) {
       iNewTop = 0;
     }
-    
+
     // make sure it can't go farther down than its height
     if( iNewTop >= $(window).height() - oPaddle.height ) {
       iNewTop = $(window).height() - oPaddle.height;
     }
-    
+
     // update the position
     oNewOffset = { top: iNewTop, left: oOffset.left };
     oGame.ai.element.offset( oNewOffset );
-    
+
     // we're no longer waiting
     bWaiting = false;
   };
-  
+
   // start a new game
   var StartGame = function(){
     // hide the menu
@@ -239,7 +239,7 @@ $(document).ready(function(){
 
     // show game
     $( '#game' ).removeClass( 'hidden' );
-    
+
     // start the game
     ListenForInput();
     setInterval(
@@ -256,10 +256,10 @@ $(document).ready(function(){
       1000 / oGame.fps
     );
   };
-  
+
   // set how to start the game
   oStartButton.on('click', StartGame );
-  
+
   // set how to start the game
   oRestartButton.on(
     'click',
