@@ -190,7 +190,9 @@ $(document).ready(function(){
   var HitPlayerPaddle = function(){
     var oBallOffset = oGame.ball.element.offset();
     var oPaddleOffset = oGame.player.element.offset();
-    return oBallOffset.left <= oGame.player.paddle.width && oBallOffset.top >= oPaddleOffset.top && oBallOffset.top <= oPaddleOffset.top + oPaddle.height;
+    return oBallOffset.left <= oGame.player.paddle.width
+           && oBallOffset.top >= oPaddleOffset.top
+           && oBallOffset.top <= oPaddleOffset.top + oPaddle.height;
   };
 
   var HitAIPaddle = function(){
@@ -200,6 +202,7 @@ $(document).ready(function(){
   };
 
   var CalculateAIPaddlePosition = function(){
+    // get offsets
     var oOffset = oGame.ai.element.offset();
     var oBallOffset = oGame.ball.element.offset();
 
